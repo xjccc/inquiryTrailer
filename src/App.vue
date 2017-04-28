@@ -1,111 +1,194 @@
 <template>
-  <div id="inquiryTra" :style="`height:${height}px`">
-    <header class="main headTitle">
+  <div id="inquiryTra">
+    <div class="background" @click="goBack" v-show="showBackground">
+    </div>
+    <header class="main headTitle" v-if="showHeaderTitle">
       <p class="title">询底价</p>
-      <span class="close" @click="goBack"></span>
+      <!-- <span class="close" @click="goBack"></span> -->
     </header>
     <header class="main title-desc">提交询价将有挂车业务员为您服务</header>
-    <ul class="main content">
-      <li class="li content-text" @click="selectCarType">
-        <label class="label asterisk">选择车型</label>
-        <p class="select">{{carType}}</p>
-      </li>
-      <li class="user-content">
-        <input type="text" class="input" v-model="name" placeholder="您的称呼" placeholder-style="color:#999" style="font-size:14px;color:#333;letter-spacing:0;line-height:14px;padding-left:30px;" @focus="focuName" :class="addNameBorder ? 'input-border' : ''" @blur="blurName" />
-        <div class="second-input">
-          <input type="text" class="phone-input" v-model.number="phone" placeholder="您的手机号"
-          placeholder-style="color:#999" style="font-size:14px;color:#333;letter-spacing:0;line-height:14px;padding-left:30px;" maxlength="11" @focus="focuPhone" :class="addPhoneBorder ? 'input-border' : ''" @blur="blurPhone" />
-          <span class="second-asterisk">*</span>
-        </div>
-      </li>
-      <li class="li content-text">
-        <label class="label asterisk">提车地区</label>
-        <p class="select">请选择</p>
-      </li>
-      <li class="li buyCount">
-        <label class="label">购车数量</label>
-        <div class="num-change">
-          <span class="operator" @click="cutNum" :class="cut ? 'cut' : ''">-</span>
-          <span class="number">{{count}}</span>
-          <span class="operator" @click="addNum" :class="add ? 'add' : ''">+</span>
-        </div>
-      </li>
-      <li class="li buyCount">
-        <label class="label">以旧换新</label>
-        <div class="chooseYN">
-          <input type="radio" id="yes" value="yes" v-model="picked" />
-          <label class="chooseLabel" for="yes">是</label>
-          <input class="cicle-no" type="radio" id="no" value="no" v-model="picked" />
-          <label class="chooseLabel" for="no">否</label>
-          <span class="span"></span>
-        </div>
-      </li>
-      <li class="li remark-content">
-        <label class="label remark">备注</label>
-        <div class="remark-textarea">
-          <textarea class="textarea" v-model="textarea" placeholder="挂车属于定制性产品，请详细填写所需产品的特殊需求和用途，如（星号，用途，规格）" placeholder-style="color:#999" maxlength="300" @input="textInput"></textarea>
-          <span class="fontNum">{{fontNum}}/300</span>
-        </div>
-      </li>
-    </ul>
-    <label for="tick" class="main personal-statement">
-      <input type="checkbox" class="tick" id="tick" value="tick" v-model="tick" />
-      <p class="personal-agree">我同意<span class="agree" @click="showPersonPro">《个人信息保护声明》</span></p>
-    </label>
-    <div class="freeGetInquiry" @click="getInquiry">免费获取最低价</div>
-    <transition name="fade">
-      <slider v-if="showSlider"></slider>
-      <!-- <select-city></select-city> -->
+    <div class="content-bottom">
+      <ul class="main content">
+        <li class="li content-text">
+          <label class="label asterisk">选择车型</label>
+          <p class="select" @click="selectCarType">{{carType}}</p>
+        </li>
+        <li class="user-content">
+          <input type="text" class="input" v-model="name" placeholder="您的称呼" placeholder-style="color:#999" style="font-size:14px;color:#333;letter-spacing:0;line-height:14px;padding-left:30px;" @focus="focuName" :class="addNameBorder ? 'input-border' : ''" @blur="blurName" />
+          <div class="second-input">
+            <input type="text" class="phone-input" v-model="phone" placeholder="您的手机号"
+            placeholder-style="color:#999" style="font-size:14px;color:#333;letter-spacing:0;line-height:14px;padding-left:30px;" maxlength="11" @focus="focuPhone" :class="addPhoneBorder ? 'input-border' : ''" @blur="blurPhone" />
+            <span class="second-asterisk">*</span>
+          </div>
+        </li>
+        <li class="li content-text">
+          <label class="label asterisk">提车地区</label>
+          <p class="select" @click="dist">{{distPlace}}</p>
+        </li>
+        <li class="li buyCount">
+          <label class="label">购车数量</label>
+          <div class="num-change">
+            <span class="operator" @click="cutNum" :class="cut ? 'cut' : ''">-</span>
+            <span class="number">{{count}}</span>
+            <span class="operator" @click="addNum" :class="add ? 'add' : ''">+</span>
+          </div>
+        </li>
+        <li class="li buyCount">
+          <label class="label">以旧换新</label>
+          <div class="chooseYN">
+            <input type="radio" id="yes" value="1" v-model="picked" />
+            <label class="chooseLabel" for="yes">是</label>
+            <input class="cicle-no" type="radio" id="no" value="0" v-model="picked" />
+            <label class="chooseLabel" for="no">否</label>
+          </div>
+        </li>
+        <li class="li remark-content">
+          <label class="label remark">备注</label>
+          <div class="remark-textarea">
+            <textarea class="textarea" v-model="textarea" placeholder="挂车属于定制性产品，请详细填写所需产品的特殊需求和用途，如（型号，用途，规格）" placeholder-style="color:#999" maxlength="300" @input="textInput"></textarea>
+            <span class="fontNum">{{fontNum}}/300</span>
+          </div>
+        </li>
+      </ul>
+      <label for="tick" class="main personal-statement">
+        <input type="checkbox" class="tick" id="tick" value="" v-model="tick" />
+        <p class="personal-agree">我同意<span class="agree" @click="showPersonPro">《个人信息保护声明》</span></p>
+      </label>
+    </div>
+    <div class="freeGetInquiry" @click="getInquiry" :class="canClick ? 'freeGetInquiryBack' : ''">免费获取最低价</div>
+    <transition name="slide">
+      <slider v-if="showSlider" :list="carData"></slider>
+      <select-city v-if="showSelectCity" :list="cityData"></select-city>
+      <personal-protect v-if="showProtect"></personal-protect>
     </transition>
     <tips :textTip="textTip" v-if="closeTheTip"></tips>
   </div>
 </template>
 
 <script>
+import stream from './util/stream.js'
 import Slider from './components/Slider.vue'
 import Tips from './components/Tips.vue'
 import SelectCity from './components/SelectCity.vue'
+import PersonalProtect from './components/PersonalProtect.vue'
 export default {
   components: {
     Slider,
     Tips,
-    SelectCity
+    SelectCity,
+    PersonalProtect
   },
   data () {
     return {
-      height: '',
+      showHeaderTitle: true,
       name: '',
       phone: '',
-      picked: 'no',
+      picked: '0',
       textarea: '',
       fontNum: 0,
-      tick: '',
+      tick: true,  // 同意个人保护信息
       showSlider: false, // 弹出选择车辆类型
+      showBackground: false,
       carType: '请选择',  // 车辆类型
+      cartypeId: '',
+      carData: [],
+      cityData: [],
+      distPlace: '请选择',
+      provinceId: '',
+      cityId: '',
       addNameBorder: false, // 添加边框
       addPhoneBorder: false,
       count: 1,
       cut: true,  // 添加样式
       add: false,
-      textTip: '请输入正确的手机号码',  // 提示内容
-      closeTheTip: false   // 关闭提示
+      textTip: '',  // 提示内容
+      closeTheTip: false,   // 关闭提示
+      showSelectCity: false,
+      showProtect: false,    // 显示个人信息保护
+      canClick: false
     }
   },
   created () {
-    this.height = document.documentElement.clientHeight
+    if (/MicroMessenger/i.test(navigator.userAgent)) {
+      this.showHeaderTitle = false
+    }
+    this.getLocations()
+    this.getCarType()
+    this.getCities()
   },
   methods: {
-    goBack () {  // 返回键
+    getLocations () {  // 定位城市
+      stream('get', 'https://dealer-api.360che.com/Dealer/getLocation.aspx', {}, (res) => {
+        if (res.isok === '1') {
+          this.distPlace = res.cityname
+          this.provinceId = res.provincesn
+          this.cityId = res.citysn
+        }
+      })
+    },
+    goBack () {  // 顶部返回键
+      this.showSlider = false
+      this.showBackground = false
+      this.showSelectCity = false
+      document.body.style.overflow = 'visible'
     },
     textInput () {  // 显示字数
       this.fontNum = this.textarea.length
     },
+    getCarType () {
+      stream('get', 'http://api.dealer.360che.com/Dealer/getProdcutSubCategory.aspx?cid=' + `${14}`, {}, (res) => {
+        this.carData = res
+      })
+    },
+    getCities () {
+      stream('get', 'https://dealer-api.360che.com/Dealer/getProvinceCity.aspx', {}, (res) => {
+        this.cityData = res.data
+      })
+    },
     selectCarType () { // 选择车辆类型
       this.showSlider = true
+      this.showBackground = true
+      document.body.style.overflow = 'hidden'
+    },
+    dist () {
+      this.showSelectCity = true
+      this.showBackground = true
       document.body.style.overflow = 'hidden'
     },
     getInquiry () { // 获取最低价
-
+      if (!this.canClick) return
+      if (!this.carTypeId) {
+        this.textTip = '请选择车型'
+        this.closeTheTip = true
+      } else if (!this.cityId) {
+        this.textTip = '请选择提车地区'
+        this.closeTheTip = true
+      } else if (!this.tick) {
+        this.textTip = '请同意个人信息保护声明'
+        this.closeTheTip = true
+      } else {
+        var options = {
+          relname: this.name,
+          tel: this.phone,
+          categoryid: 14,
+          subcategoryid: this.carTypeId,
+          provincesn: this.provinceId,
+          citysn: this.cityId,
+          clueresource: 6,
+          buycount: this.count,
+          isold: this.picked,
+          remark: this.textarea
+        }
+        stream('get', 'https://dealer-api.360che.com/Dealer/submitDealerClues.aspx?', options, (res) => {
+          if (res.isok === 1) {
+            this.textTip = '询价成功，稍后会有经销商与您取得联系'
+            this.closeTheTip = true
+          } else {
+            this.closeTheTip = true
+            this.textTip = res.result
+          }
+        })
+      }
     },
     focuName () {
       this.addNameBorder = true
@@ -118,12 +201,19 @@ export default {
     },
     blurPhone () {
       this.addPhoneBorder = false
+      var phone = this.phone
+      if (!phone || !phone.match(/1(([38]\d)|(4[57])|(5[012356789])|(7[013678]))\d{8}/g)) {
+        this.textTip = '请输入正确的手机号码'
+        this.closeTheTip = true
+      } else {
+        this.canClick = true
+      }
     },
     cutNum () {
       if (this.count <= 2) {
-        this.count = 1
         this.cut = true
         this.add = false
+        this.count = 1
       } else {
         this.count = this.count - 1
         this.cut = false
@@ -142,7 +232,7 @@ export default {
       }
     },
     showPersonPro () {  // 点击个人声明
-      console.log(1)
+      this.showProtect = true
     }
   }
 }
@@ -150,8 +240,21 @@ export default {
 
 <style scoped>
   #inquiryTra{
+    height: 100%;
     overflow: auto;
     -webkit-overflow-scrolling:touch;
+  }
+  .background{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 50;
+  }
+  .content-bottom{
+    margin-bottom: 60px;
   }
   .main{
     background: #fff;
@@ -253,6 +356,9 @@ export default {
     flex:1;
     font-size: 14px;
     color: #999;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
   .user-content{
     display: flex;
@@ -324,18 +430,22 @@ export default {
     flex:1;
   }
   .cicle-no{
-    margin-left: 40px;
+    margin-left: 25px;
   }
   .chooseLabel{
     position: relative;
+    width: 20px;
+    margin-left: 15px;
     font-size: 14px;
     color: #333;
   }
   .content input[type="radio"] + .chooseLabel:before{
     content: "";
-    display: inline-block;
-    margin-right: 5px;
-    margin-top: -2px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin-left: -20px;
+    margin-top: 14px;
     width: 14px;
     height: 14px;
     border-radius: 50%;
@@ -351,11 +461,11 @@ export default {
     position: absolute;
     content: "";
     width: 10px;
+    height: 10px;
     left: 0;
     top: 50%;
-    margin-left: 3px;
-    transform: translateY(-50%);
-    height: 10px;
+    margin-left: -17px;
+    margin-top: -5px;
     border-radius: 50%;
     border-color: #FF6600;
     background: #FF6600;
@@ -379,6 +489,8 @@ export default {
     letter-spacing: 0;
     line-height: 21px;
     height: 100px;
+    padding-top: 10px;
+    padding-right: 15px;
   }
   .fontNum{
     margin-top: 5px;
@@ -425,6 +537,7 @@ export default {
   .personal-statement input[type="checkbox"]:checked + .personal-agree:after{
     position: absolute;
     left: 0;
+    top:0;
     content: "";
     color: #fff;
     margin-left: -26px;
@@ -452,19 +565,28 @@ export default {
     z-index: 15;
   }
   .freeGetInquiry{
-    margin-top: 10px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
     height: 49px;
     line-height: 49px;
-    background: #FF6600;
+    background: #ddd;
     text-align: center;
     font-size: 18px;
     color: #FFFFFF;
     letter-spacing: 0;
+    z-index: 16;
   }
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s
+  .freeGetInquiryBack{
+    background: #FF6600;
   }
-  .fade-enter, .fade-leave-active {
-    opacity: 0
+  .slide-enter-active, .slide-leave-active {
+    transition: transform .2s linear;
+    transform: translate3d(0, 0, 0);
+  }
+  .slide-enter, .slide-leave-active {
+    transform: translate3d(100%, 0, 0);
+    transition: transform .2s linear;
   }
 </style>

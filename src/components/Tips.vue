@@ -42,13 +42,16 @@ export default {
     z-index: 100;
   }
   .content-text{
-    flex:1;
+    display: flex;
     padding:16px 15px 15px 16px;
+    border-bottom: 1px solid #eee;
+    flex:1;
+    justify-content: center;
+    align-items: center;
     font-size: 16px;
     color: #333333;
     line-height: 24px;
     word-wrap: break-word;
-    border-bottom: 1px solid #eee;
   }
   .know{
     height: 43px;
